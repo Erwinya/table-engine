@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Table Engine</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <header class="top">
+    <p class="kicker">Table Engine</p>
+    <h1>Sortable inspection table</h1>
+  </header>
+  <section class="toolbar">
+    <label>Search<input id="search" type="search" placeholder="lot, part, inspector…" /></label>
+    <label>Status
+      <select id="status-filter">
+        <option value="">All</option>
+        <option>PLANNED</option>
+        <option>IN_PROGRESS</option>
+        <option>COMPLETED</option>
+      </select>
+    </label>
+    <label>Page size
+      <select id="page-size">
+        <option>5</option>
+        <option selected>10</option>
+        <option>20</option>
+      </select>
+    </label>
+  </section>
+  <div class="table-shell">
+    <table>
+      <thead>
+        <tr>
+          <th><button type="button" data-sort="lot">Lot</button></th>
+          <th><button type="button" data-sort="part">Part</button></th>
+          <th><button type="button" data-sort="inspector">Inspector</button></th>
+          <th><button type="button" data-sort="status">Status</button></th>
+          <th><button type="button" data-sort="result">Result</button></th>
+          <th><button type="button" data-sort="updated">Updated</button></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+  <footer class="pager">
+    <span id="page-info">Loading…</span>
+    <div>
+      <button type="button" id="prev" class="btn">Previous</button>
+      <button type="button" id="next" class="btn">Next</button>
+    </div>
+  </footer>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
