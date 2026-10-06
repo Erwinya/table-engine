@@ -1,10 +1,10 @@
-# table-engine
+﻿# table-engine
 
 Client-side table engine with search, status filter, column sort, and pagination.
 
 ## Status
 
-Table helpers, sample data, and a working demo page (`index.html` / `js/app.js`) are in place. Styles will land in a follow-up commit.
+Table helpers, sample data, demo page (`index.html` / `js/app.js`), and demo styles (`css/styles.css`) are in place.
 
 ## Run
 

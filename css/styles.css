@@ -1,0 +1,181 @@
+:root {
+  --bg: #e8eef5;
+  --ink: #1b2838;
+  --muted: #52667a;
+  --line: #c9d4e1;
+  --surface: #f8fbff;
+  --accent: #3d5a80;
+  --font: "Manrope", "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", Consolas, monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font);
+  background: linear-gradient(180deg, #f3f6fa, var(--bg));
+  padding: 2rem 5vw 2.5rem;
+}
+
+.top {
+  max-width: 1100px;
+  margin: 0 auto 1rem;
+}
+
+.kicker {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+h1 {
+  margin: 0.3rem 0 0;
+  letter-spacing: -0.03em;
+}
+
+.toolbar {
+  max-width: 1100px;
+  margin: 0 auto 0.8rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+label {
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+input,
+select,
+button {
+  font: inherit;
+}
+
+input,
+select {
+  border: 1px solid var(--line);
+  border-radius: 0.35rem;
+  padding: 0.6rem 0.7rem;
+  background: #fff;
+  min-width: 10rem;
+}
+
+.table-shell {
+  max-width: 1100px;
+  margin: 0 auto;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--surface);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.75rem 0.85rem;
+  border-bottom: 1px solid var(--line);
+}
+
+th button {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+th button.active {
+  color: var(--accent);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.badge.PLANNED {
+  background: #e7eef7;
+  color: #335c81;
+}
+
+.badge.IN_PROGRESS {
+  background: #e7f0ff;
+  color: #2f5aa8;
+}
+
+.badge.COMPLETED {
+  background: #e5f6ef;
+  color: #1b7f5a;
+}
+
+.badge.PASS {
+  color: #1b7f5a;
+}
+
+.badge.FAIL {
+  color: #b42318;
+}
+
+.badge.PENDING,
+.badge.CONDITIONAL {
+  color: #8a6d3b;
+}
+
+.pager {
+  max-width: 1100px;
+  margin: 0.8rem auto 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--muted);
+}
+
+.btn {
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 0.35rem;
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+@media (max-width: 700px) {
+  .pager {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
