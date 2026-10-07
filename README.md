@@ -4,7 +4,7 @@ Client-side table engine with search, status filter, column sort, and pagination
 
 ## Status
 
-Table helpers, sample data, demo page (`index.html` / `js/app.js`), and demo styles (`css/styles.css`) are in place.
+Ready for use: table helpers, sample data, demo page, styles, and CI.
 
 ## Run
 
