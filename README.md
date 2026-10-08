@@ -4,7 +4,7 @@ Client-side table engine with search, status filter, column sort, and pagination
 
 ## Status
 
-Ready for use: table helpers, sample data, demo page, styles, and CI.
+Complete: table helpers, sample data, accessible demo page, styles, and CI.
 
 ## Run
 
