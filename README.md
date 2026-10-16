@@ -1,4 +1,4 @@
-﻿# table-engine
+# table-engine
 
 Client-side table engine with search, status filter, column sort, and pagination.
 
@@ -23,6 +23,9 @@ const filtered = filterRows(rows, { query: "WAFER", status: "COMPLETED" });
 const sorted = sortRows(filtered, "updated", "desc");
 const page = paginate(sorted, 1, 10);
 ```
+
+
+Default page size is `10` (`paginate(rows, page, pageSize)`).
 
 ## License
 
