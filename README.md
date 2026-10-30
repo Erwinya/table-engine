@@ -6,6 +6,11 @@ Client-side table engine with search, status filter, column sort, and pagination
 
 Complete: table helpers, sample data, accessible demo page, styles, and CI.
 
+
+## Screenshot
+
+![Table Engine demo](docs/demo.png)
+
 ## Run
 
 ```powershell
