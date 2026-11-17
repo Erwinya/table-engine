@@ -172,6 +172,18 @@ code {
   cursor: not-allowed;
 }
 
+.clear-btn {
+  align-self: end;
+  min-height: 2.55rem;
+}
+
+.empty-row td {
+  text-align: center;
+  color: var(--muted);
+  padding: 1.6rem 0.85rem;
+  font-weight: 600;
+}
+
 @media (max-width: 700px) {
   .pager {
     flex-direction: column;

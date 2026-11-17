@@ -4,6 +4,7 @@ const state = {
   rows: [],
   query: "",
   status: "",
+  result: "",
   sortKey: "updated",
   sortDir: "desc",
   page: 1,
@@ -14,6 +15,11 @@ const tbody = document.getElementById("tbody");
 const pageInfo = document.getElementById("page-info");
 const prevBtn = document.getElementById("prev");
 const nextBtn = document.getElementById("next");
+const searchInput = document.getElementById("search");
+const statusFilter = document.getElementById("status-filter");
+const resultFilter = document.getElementById("result-filter");
+const pageSizeSelect = document.getElementById("page-size");
+const clearBtn = document.getElementById("clear-filters");
 
 function escapeHtml(value) {
   return String(value)
@@ -23,15 +29,29 @@ function escapeHtml(value) {
     .replaceAll('"', "&quot;");
 }
 
+function hasActiveFilters() {
+  return Boolean(state.query || state.status || state.result);
+}
+
 function render() {
-  const filtered = filterRows(state.rows, { query: state.query, status: state.status });
+  const filtered = filterRows(state.rows, {
+    query: state.query,
+    status: state.status,
+    result: state.result,
+  });
   const sorted = sortRows(filtered, state.sortKey, state.sortDir);
   const page = paginate(sorted, state.page, state.pageSize);
   state.page = page.page;
 
-  tbody.innerHTML = page.rows
-    .map(
-      (row) => `
+  if (page.rows.length === 0) {
+    tbody.innerHTML = `
+      <tr class="empty-row">
+        <td colspan="6">${hasActiveFilters() ? "No rows match the current filters." : "No inspection rows loaded."}</td>
+      </tr>`;
+  } else {
+    tbody.innerHTML = page.rows
+      .map(
+        (row) => `
     <tr>
       <td><code>${escapeHtml(row.lot)}</code></td>
       <td>${escapeHtml(row.part)}</td>
@@ -40,32 +60,60 @@ function render() {
       <td><span class="badge ${escapeHtml(row.result)}">${escapeHtml(row.result)}</span></td>
       <td>${escapeHtml(row.updated)}</td>
     </tr>`
-    )
-    .join("");
+      )
+      .join("");
+  }
 
-  pageInfo.textContent = `Showing ${page.from}–${page.to} of ${page.total}`;
-  prevBtn.disabled = page.page <= 1;
-  nextBtn.disabled = page.page >= page.totalPages;
+  pageInfo.textContent =
+    page.total === 0
+      ? "Showing 0 of 0"
+      : `Showing ${page.from}–${page.to} of ${page.total}`;
+  prevBtn.disabled = page.page <= 1 || page.total === 0;
+  nextBtn.disabled = page.page >= page.totalPages || page.total === 0;
+  clearBtn.disabled = !hasActiveFilters();
+
   document.querySelectorAll("th button").forEach((btn) => {
-    btn.classList.toggle("active", btn.dataset.sort === state.sortKey);
+    const active = btn.dataset.sort === state.sortKey;
+    btn.classList.toggle("active", active);
+    btn.setAttribute("aria-sort", active ? (state.sortDir === "asc" ? "ascending" : "descending") : "none");
+    const label = btn.dataset.label || btn.textContent.replace(/\s*[↑↓]$/, "");
+    btn.dataset.label = label;
+    btn.textContent = active ? `${label} ${state.sortDir === "asc" ? "↑" : "↓"}` : label;
   });
 }
 
-document.getElementById("search").addEventListener("input", (e) => {
+function clearFilters() {
+  state.query = "";
+  state.status = "";
+  state.result = "";
+  state.page = 1;
+  searchInput.value = "";
+  statusFilter.value = "";
+  resultFilter.value = "";
+  render();
+}
+
+searchInput.addEventListener("input", (e) => {
   state.query = e.target.value;
   state.page = 1;
   render();
 });
-document.getElementById("status-filter").addEventListener("change", (e) => {
+statusFilter.addEventListener("change", (e) => {
   state.status = e.target.value;
   state.page = 1;
   render();
 });
-document.getElementById("page-size").addEventListener("change", (e) => {
+resultFilter.addEventListener("change", (e) => {
+  state.result = e.target.value;
+  state.page = 1;
+  render();
+});
+pageSizeSelect.addEventListener("change", (e) => {
   state.pageSize = Number(e.target.value);
   state.page = 1;
   render();
 });
+clearBtn.addEventListener("click", clearFilters);
 document.querySelectorAll("th button").forEach((btn) => {
   btn.addEventListener("click", () => {
     const key = btn.dataset.sort;
@@ -86,9 +134,15 @@ nextBtn.addEventListener("click", () => {
   render();
 });
 
-const data = await fetch("./data/inspections.json").then((r) => {
-  if (!r.ok) throw new Error("Failed to load data");
-  return r.json();
-});
-state.rows = data;
-render();
+try {
+  const response = await fetch("./data/inspections.json");
+  if (!response.ok) throw new Error("Failed to load data");
+  state.rows = await response.json();
+  render();
+} catch (error) {
+  pageInfo.textContent = "Failed to load inspection data.";
+  tbody.innerHTML = `
+    <tr class="empty-row">
+      <td colspan="6">${escapeHtml(error.message || "Load error")}</td>
+    </tr>`;
+}

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Client-side inspection table with search, status filter, sort, and pagination." />
+  <meta name="description" content="Client-side inspection table with search, status/result filters, sort, and pagination." />
   <title>Table Engine</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -25,6 +25,15 @@
         <option>COMPLETED</option>
       </select>
     </label>
+    <label>Result
+      <select id="result-filter">
+        <option value="">All</option>
+        <option>PASS</option>
+        <option>FAIL</option>
+        <option>CONDITIONAL</option>
+        <option>PENDING</option>
+      </select>
+    </label>
     <label>Page size
       <select id="page-size">
         <option>5</option>
@@ -32,17 +41,18 @@
         <option>20</option>
       </select>
     </label>
+    <button type="button" id="clear-filters" class="btn clear-btn" disabled>Clear filters</button>
   </section>
   <div class="table-shell">
     <table>
       <thead>
         <tr>
-          <th><button type="button" data-sort="lot">Lot</button></th>
-          <th><button type="button" data-sort="part">Part</button></th>
-          <th><button type="button" data-sort="inspector">Inspector</button></th>
-          <th><button type="button" data-sort="status">Status</button></th>
-          <th><button type="button" data-sort="result">Result</button></th>
-          <th><button type="button" data-sort="updated">Updated</button></th>
+          <th><button type="button" data-sort="lot" aria-sort="none">Lot</button></th>
+          <th><button type="button" data-sort="part" aria-sort="none">Part</button></th>
+          <th><button type="button" data-sort="inspector" aria-sort="none">Inspector</button></th>
+          <th><button type="button" data-sort="status" aria-sort="none">Status</button></th>
+          <th><button type="button" data-sort="result" aria-sort="none">Result</button></th>
+          <th><button type="button" data-sort="updated" aria-sort="descending">Updated</button></th>
         </tr>
       </thead>
       <tbody id="tbody"></tbody>

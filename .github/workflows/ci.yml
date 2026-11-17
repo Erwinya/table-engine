@@ -17,6 +17,8 @@ jobs:
         run: |
           node --check js/engine.js
           node --check js/app.js
+      - name: Unit tests
+        run: node --test test/engine.test.mjs
       - name: Required files
         run: |
           test -f index.html
