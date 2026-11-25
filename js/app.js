@@ -1,14 +1,9 @@
-import { filterRows, paginate, sortRows } from "./engine.js";
+import { filterRows, paginate, parseState, serializeState, sortRows } from "./engine.js";
 
+const initial = parseState(window.location.search);
 const state = {
   rows: [],
-  query: "",
-  status: "",
-  result: "",
-  sortKey: "updated",
-  sortDir: "desc",
-  page: 1,
-  pageSize: 10,
+  ...initial,
 };
 
 const tbody = document.getElementById("tbody");
@@ -20,6 +15,11 @@ const statusFilter = document.getElementById("status-filter");
 const resultFilter = document.getElementById("result-filter");
 const pageSizeSelect = document.getElementById("page-size");
 const clearBtn = document.getElementById("clear-filters");
+
+searchInput.value = state.query;
+statusFilter.value = state.status;
+resultFilter.value = state.result;
+pageSizeSelect.value = String(state.pageSize);
 
 function escapeHtml(value) {
   return String(value)
@@ -33,6 +33,12 @@ function hasActiveFilters() {
   return Boolean(state.query || state.status || state.result);
 }
 
+function syncUrl() {
+  const next = serializeState(state);
+  const url = `${window.location.pathname}${next}`;
+  window.history.replaceState(null, "", url);
+}
+
 function render() {
   const filtered = filterRows(state.rows, {
     query: state.query,
@@ -42,6 +48,7 @@ function render() {
   const sorted = sortRows(filtered, state.sortKey, state.sortDir);
   const page = paginate(sorted, state.page, state.pageSize);
   state.page = page.page;
+  syncUrl();
 
   if (page.rows.length === 0) {
     tbody.innerHTML = `
@@ -72,10 +79,12 @@ function render() {
   nextBtn.disabled = page.page >= page.totalPages || page.total === 0;
   clearBtn.disabled = !hasActiveFilters();
 
-  document.querySelectorAll("th button").forEach((btn) => {
-    const active = btn.dataset.sort === state.sortKey;
+  document.querySelectorAll("th[data-sort]").forEach((th) => {
+    const key = th.dataset.sort;
+    const btn = th.querySelector("button");
+    const active = key === state.sortKey;
     btn.classList.toggle("active", active);
-    btn.setAttribute("aria-sort", active ? (state.sortDir === "asc" ? "ascending" : "descending") : "none");
+    th.setAttribute("aria-sort", active ? (state.sortDir === "asc" ? "ascending" : "descending") : "none");
     const label = btn.dataset.label || btn.textContent.replace(/\s*[↑↓]$/, "");
     btn.dataset.label = label;
     btn.textContent = active ? `${label} ${state.sortDir === "asc" ? "↑" : "↓"}` : label;
@@ -90,6 +99,15 @@ function clearFilters() {
   searchInput.value = "";
   statusFilter.value = "";
   resultFilter.value = "";
+  render();
+}
+
+function applyParsedState(parsed) {
+  Object.assign(state, parsed);
+  searchInput.value = state.query;
+  statusFilter.value = state.status;
+  resultFilter.value = state.result;
+  pageSizeSelect.value = String(state.pageSize);
   render();
 }
 
@@ -114,9 +132,9 @@ pageSizeSelect.addEventListener("change", (e) => {
   render();
 });
 clearBtn.addEventListener("click", clearFilters);
-document.querySelectorAll("th button").forEach((btn) => {
+document.querySelectorAll("th[data-sort] button").forEach((btn) => {
   btn.addEventListener("click", () => {
-    const key = btn.dataset.sort;
+    const key = btn.closest("th").dataset.sort;
     if (state.sortKey === key) state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
     else {
       state.sortKey = key;
@@ -132,6 +150,9 @@ prevBtn.addEventListener("click", () => {
 nextBtn.addEventListener("click", () => {
   state.page += 1;
   render();
+});
+window.addEventListener("popstate", () => {
+  applyParsedState(parseState(window.location.search));
 });
 
 try {

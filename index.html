@@ -45,14 +45,15 @@
   </section>
   <div class="table-shell">
     <table>
+      <caption class="visually-hidden">Inspection lots with status, result, and last update</caption>
       <thead>
         <tr>
-          <th><button type="button" data-sort="lot" aria-sort="none">Lot</button></th>
-          <th><button type="button" data-sort="part" aria-sort="none">Part</button></th>
-          <th><button type="button" data-sort="inspector" aria-sort="none">Inspector</button></th>
-          <th><button type="button" data-sort="status" aria-sort="none">Status</button></th>
-          <th><button type="button" data-sort="result" aria-sort="none">Result</button></th>
-          <th><button type="button" data-sort="updated" aria-sort="descending">Updated</button></th>
+          <th scope="col" data-sort="lot" aria-sort="none"><button type="button">Lot</button></th>
+          <th scope="col" data-sort="part" aria-sort="none"><button type="button">Part</button></th>
+          <th scope="col" data-sort="inspector" aria-sort="none"><button type="button">Inspector</button></th>
+          <th scope="col" data-sort="status" aria-sort="none"><button type="button">Status</button></th>
+          <th scope="col" data-sort="result" aria-sort="none"><button type="button">Result</button></th>
+          <th scope="col" data-sort="updated" aria-sort="descending"><button type="button">Updated</button></th>
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
