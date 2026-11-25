@@ -1,6 +1,13 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { filterRows, paginate, sortRows } from "../js/engine.js";
+import {
+  filterRows,
+  normalizeState,
+  paginate,
+  parseState,
+  serializeState,
+  sortRows,
+} from "../js/engine.js";
 
 const sample = [
   { lot: "LOT-1", part: "WAFER-A", inspector: "qa.lead", status: "COMPLETED", result: "PASS", updated: "2026-11-10" },
@@ -33,4 +40,34 @@ test("paginate clamps page and reports window", () => {
   const empty = paginate([], 1, 10);
   assert.equal(empty.from, 0);
   assert.equal(empty.to, 0);
+});
+
+test("normalizeState clamps and rejects unknown keys", () => {
+  const state = normalizeState({
+    query: "lot",
+    sortKey: "nope",
+    sortDir: "sideways",
+    page: 0,
+    pageSize: 999,
+  });
+  assert.equal(state.sortKey, "updated");
+  assert.equal(state.sortDir, "desc");
+  assert.equal(state.page, 1);
+  assert.equal(state.pageSize, 100);
+  assert.equal(state.query, "lot");
+});
+
+test("parseState and serializeState round-trip", () => {
+  const parsed = parseState("?q=WAFER&status=COMPLETED&result=PASS&sort=lot&dir=asc&page=2&size=5");
+  assert.deepEqual(parsed, {
+    query: "WAFER",
+    status: "COMPLETED",
+    result: "PASS",
+    sortKey: "lot",
+    sortDir: "asc",
+    page: 2,
+    pageSize: 5,
+  });
+  assert.equal(serializeState(parsed), "?q=WAFER&status=COMPLETED&result=PASS&sort=lot&dir=asc&page=2&size=5");
+  assert.equal(serializeState({}), "");
 });
